@@ -13,39 +13,3 @@
  *= require_tree .
  *= require_self
  */
-
-.custom-button.btn {
-  background-color: #293241;
-  color: #FFF;
-  border: none;
-}
-.custom-button.btn:hover {
-  color: #FFF !important;
-  border: none;
-}
-.hero {
-  width: 100vw;
-  height: 50vh;
-}
-.hero img {
-  object-fit: cover;
-  object-position: top;
-  height: 100%;
-  width: 100%;
-}
-.overlay {
-  height: 100%;
-  width: 100%;
-  opacity: 0.4;
-}
-
-ul.tags-list {
-  display: inline-block;
-}
-.tags-list li {
-  background-color: #c7c7c7;
-  display: inline-block;
-  margin: 2px;
-  padding: 2px 13px;
-  border-radius: 16px;
-}
