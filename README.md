@@ -1,24 +1,22 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Steps to run the application
+#### Prerequisites
+* ruby 2.7
+* node v8.17
+* postgresql 
 
-Things you may want to cover:
+#### Development env
+* `bundle install`
+* `yarn install`
+* `rails db:create`, although it's not using any db for now 
+* edit `.env` to place to the values for `Contentful_Space` & `Contentful_Access_Token` vars
+* execute `rails s` to run the app
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+#### Production env
+* make sure to set `Contentful_Space` & `Contentful_Access_Token` vars in ENV
+* `bundle install`
+* `yarn install`
+* `rails assets:precompile`
+* `rails db:create`
+* 
