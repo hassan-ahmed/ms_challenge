@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  ingredients: 
+  host: MyString
+  language: MyString
+  author: MyString
+  host_image_url: MyString
+  instructions: MyText
+  host_ratings: 1.5
+  total_time: 1
+  host_url: MyString
+  yields: MyString
+
+two:
+  title: MyString
+  ingredients: 
+  host: MyString
+  language: MyString
+  author: MyString
+  host_image_url: MyString
+  instructions: MyText
+  host_ratings: 1.5
+  total_time: 1
+  host_url: MyString
+  yields: MyString
