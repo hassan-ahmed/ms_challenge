@@ -1,99 +1,82 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import axios from 'axios';
 
-class Recipe extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      recipe: {
-        title: "",
-        description: "",
-        calories: null,
-        tags: [],
-        photo_url: null,
-        chef: ""
-      },
-      loading: true
-    };
-  }
+const Recipe = (props) => {
+  const [recipe, setRecipe] = useState({
+    id: null,
+    title: "",
+    instructions: "",
+    ingredients: [],
+    total_time: null,
+    yields: "",
+    host: "",
+    host_author: "",
+    host_image_url: null,
+    host_ratings: null,
+    external_url: null,
+    language: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const { id: recipeId } = useParams();
 
-  componentDidMount() {
-    const {
-      match: {
-        params: { id }
-      }
-    } = this.props;
+  useEffect(() => {
+    const fetchRecipe = async (id) => {
+      const response = await axios(`/api/v1/recipes/${id}`);
+      setRecipe(response.data);
+      setLoading(false);
+    }
 
-    const url = `/api/v1/recipes/${id}`;
+    fetchRecipe(recipeId);
+  }, []);
 
-    fetch(url)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
+  return (
+    <div className="">
+      <div className="hero position-relative d-flex align-items-center justify-content-center">
+        {!loading &&
+          <img
+            src={recipe.host_image_url}
+            alt={`${recipe.title} image`}
+            className="img-fluid position-absolute"
+          />
         }
-        throw new Error("Network response was not ok.");
-      })
-      .then(response => {
-        this.setState({
-          recipe: response,
-          loading: false
-        });
-      })
-      .catch(() => {
-        this.setState({ loading: false });
-        this.props.history.push("/")
-      });
-  }
-
-  render() {
-    const { recipe, loading } = this.state;
-
-    return (
-      <div className="">
-        <div className="hero position-relative d-flex align-items-center justify-content-center">
-          {!loading &&
-            <img
-              src={recipe.photo_url}
-              alt={`${recipe.title} image`}
-              className="img-fluid position-absolute"
-            />
-          }
-          <div className="overlay bg-dark position-absolute" />
-          <h1 className="display-4 position-relative text-white">
-            {recipe.title}
-          </h1>
-        </div>
-        <div className="container py-5">
-          {loading ?
-            <h4>loading...</h4>
-          :
-            <div className="row">
-              <div className="col-sm-12 col-lg-7">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: `${recipe.description}`
-                  }}
-                />
-                {recipe.chef && <span>By: {recipe.chef}</span>}
-              </div>
-              {recipe.tags && recipe.tags.length > 0 &&
-                <div className="col-sm-12 col-lg-3">
-                  <span className="mb-2">Tags: </span>
-                  <ul className="list-group tags-list">
-                    {recipe.tags.map((tag, index) => <li key={index}>{tag}</li>)}
-                  </ul>
-                </div>
-              }
-            </div>
-          }
-          <Link to="/" className="btn btn-link">
-            Back to recipes
-          </Link>
-        </div>
+        <div className="overlay bg-dark position-absolute" />
+        <h1 className="display-4 position-relative text-white">
+          {recipe.title}
+        </h1>
       </div>
-    );
-  }
-
+      <div className="container py-5">
+        {loading ?
+          <h4>loading...</h4>
+        :
+          <div className="row">
+            <div className="col-sm-12 col-lg-7">
+              <p>Total time: {recipe.total_time} minutes</p>
+              <p>Yield: {recipe.yields} </p>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: `${recipe.instructions}`
+                }}
+              />
+              {recipe.host_author && <p>- Recipe by: {recipe.host_author}</p>}
+              {recipe.host_ratings && <p>Rating: {recipe.host_ratings}</p>}
+            </div>
+            {recipe.ingredients && recipe.ingredients.length > 0 &&
+              <div className="col-sm-12 col-lg-3">
+                <span className="mb-2">Ingredients: </span>
+                <ul className="list-group tags-list">
+                  {recipe.ingredients.map((ingredient, index) => <li className="list-group-item" key={index}>{ingredient}</li>)}
+                </ul>
+              </div>
+            }
+          </div>
+        }
+        <Link to="/" className="btn btn-link">
+          Back to recipes
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 export default Recipe;

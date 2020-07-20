@@ -24,12 +24,6 @@
 }
 
 ul.tags-list {
-  display: inline-block;
 }
 .tags-list li {
-  background-color: #c7c7c7;
-  display: inline-block;
-  margin: 2px;
-  padding: 2px 13px;
-  border-radius: 16px;
 }
