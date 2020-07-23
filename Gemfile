@@ -19,7 +19,8 @@ gem 'webpacker', '~> 4.0'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
-gem 'contentful'
+gem 'active_model_serializers', '~> 0.10.0'
+gem 'searchkick', '~> 4.4.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

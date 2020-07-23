@@ -2,21 +2,33 @@
 
 Steps to run the application
 #### Prerequisites
-* ruby 2.7
+* ruby 2.7.1
 * node v8.17
-* postgresql 
+* python 3.x
+* postgresql 10+
+* elasticsearch 7.x
+* docker 18+
+* docker-compose 1.26
 
-#### Development env
+#### Rails app dev setup
 * `bundle install`
 * `yarn install`
-* `rails db:create`, although it's not using any db for now 
-* edit `.env` to place to the values for `Contentful_Space` & `Contentful_Access_Token` vars
-* execute `rails s` to run the app
+* `rails db:create` & `rails db:migrate`
+* `cp .env-sample .env` & update ENV vars accordingly
+* run `rails s` to start the app
+* run `rails searchkick:reindex CLASS=Recipe` to index recipes in elasticsearch
 
-#### Production env
-* make sure to set `Contentful_Space` & `Contentful_Access_Token` vars in ENV
+#### Recipe scraper
+* run `docker-compose up --build` & it should start scraping recipes
+* logs are placed in scraper-data/scraper.log
+* `docker ps` to list containers
+* `docker logs -f recipe-scraper` to check logs from the container
+* `docker exec -it recipe-scraper bin/bash` to log in to the container
+
+#### Rails app prod env
+* make sure to set required ENV vars
 * `bundle install`
 * `yarn install`
 * `rails assets:precompile`
-* `rails db:create`
+* `rails db:create` & `rails db:migrate`
 * 

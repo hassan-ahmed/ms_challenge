@@ -9,6 +9,8 @@ services:
       - ./scraper-data/:/scraper-data
     # network_mode is used so the container can connect to local database or other services
     network_mode: "host"
+    image: recipe-scraper:recipe-scraper
+    container_name: recipe-scraper
     environment:
       DATABASE_HOST: ${DATABASE_HOST}
       DATABASE_PORT: ${DATABASE_PORT}
