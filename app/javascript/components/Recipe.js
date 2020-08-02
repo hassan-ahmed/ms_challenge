@@ -4,18 +4,14 @@ import axios from 'axios';
 
 const Recipe = (props) => {
   const [recipe, setRecipe] = useState({
-    id: null,
     title: "",
     instructions: "",
     ingredients: [],
     total_time: null,
     yields: "",
-    host: "",
     host_author: "",
     host_image_url: null,
     host_ratings: null,
-    external_url: null,
-    language: "",
   });
   const [loading, setLoading] = useState(false);
   const { id: recipeId } = useParams();

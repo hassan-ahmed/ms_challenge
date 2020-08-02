@@ -1,20 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState('');
+  const focusSearch = useRef(null);
+
+  const fetchRecipes = async (query) => {
+    const response = await axios(`/api/v1/recipes?query=${query}`);
+    setRecipes(response.data);
+    setLoading(false);
+  }
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      const response = await axios(`/api/v1/recipes`);
-      setRecipes(response.data);
-      setLoading(false);
-    }
-
     fetchRecipes();
+    focusSearch.current.focus();
   }, []);
+
+  const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  useEffect(() => {
+    let currentQuery = true;
+    const controller = new AbortController();
+
+    const loadRecipes = async () => {
+      await sleep(500);
+      if (currentQuery) {
+        fetchRecipes(query, controller);
+      }
+    }
+    loadRecipes();
+
+    return () => {
+      currentQuery = false;
+      controller.abort();
+    }
+  }, [query]);
 
   const renderRecipe = (recipe, index) => {
     return (
@@ -57,6 +82,14 @@ const Home = () => {
           <p className="lead text-muted">
             Recipes for every occasion
           </p>
+
+          <input 
+            type="text" 
+            placeholder="Search for a recipe..." 
+            ref={focusSearch}
+            onChange={(e) => setQuery(e.target.value)}
+            value={query}
+          />
         </div>
       </section>
       <div className="py-5">
