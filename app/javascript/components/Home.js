@@ -1,16 +1,34 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
+import { useInfiniteScroll } from 'react-infinite-scroll-hook';
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [pageNum, setPageNum] = useState(1);
   const focusSearch = useRef(null);
 
-  const fetchRecipes = async (query) => {
+  const fetchRecipes = async (query, pageNum) => {
     const response = await axios(`/api/v1/recipes?query=${query}`);
     setRecipes(response.data);
+    setLoading(false);
+    setPageNum(1);
+    setHasNextPage(true);
+  }
+
+  const fetchRecipesPaginated = async (query, pageNum) => {
+    setLoading(true);
+    const response = await axios(`/api/v1/recipes?query=${query}&page=${pageNum}`);
+    if (response.data.length > 0) {
+      setRecipes([...recipes, ...response.data]);
+      setPageNum(pageNum);
+      setHasNextPage(true);
+    } else {
+      setHasNextPage(false);
+    }
     setLoading(false);
   }
 
@@ -40,7 +58,14 @@ const Home = () => {
       controller.abort();
     }
   }, [query]);
-
+ 
+  const infiniteRef = useInfiniteScroll({
+    loading,
+    hasNextPage,
+    onLoadMore: () => { fetchRecipesPaginated(query, pageNum + 1); },
+    scrollContainer: "window"
+  });
+ 
   const renderRecipe = (recipe, index) => {
     return (
       <div key={index} className="col-md-6 col-lg-4">
@@ -93,13 +118,10 @@ const Home = () => {
         </div>
       </section>
       <div className="py-5">
-        <main className="container">
+        <main className="container" ref={infiniteRef}>
           <div className="row my-flex-card">
-            {loading ?
-              <h4>loading...</h4>
-            :
-              renderRecipes()
-            }
+            {renderRecipes()}
+            {loading && <h4>loading...</h4>}
           </div>
         </main>
       </div>
